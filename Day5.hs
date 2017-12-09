@@ -29,5 +29,3 @@ part1 = escape (+1)
 
 part2 :: FilePath -> IO Int
 part2 = escape (\i -> if i >= 3 then i - 1 else i + 1)
-
-main = part2 "/home/phil/Downloads/input" >>= print
