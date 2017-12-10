@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import Data.Bits
 import qualified Data.ByteString.Char8 as BS
 import Data.Char
