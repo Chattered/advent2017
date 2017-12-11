@@ -6,9 +6,7 @@ skip :: Int -> [a] -> [a]
 skip n xs = take (length xs) . drop n . cycle $ xs
 
 flipSection :: Int -> [a] -> [a]
-flipSection = flipS []
-  where flipS acc 0 xs     = acc ++ xs
-        flipS acc n (x:xs) = flipS (x:acc) (n-1) xs
+flipSection n xs = let (ys,zs) = splitAt n xs in reverse ys ++ zs
 
 knot :: Int -> [Int] -> [a] -> ([a],Int)
 knot skipLength [] xs     = (xs,skipLength)
