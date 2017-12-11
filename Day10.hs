@@ -1,7 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 import Data.Bits
-import qualified Data.ByteString.Char8 as BS
 import Data.Char
 import Numeric
 
@@ -43,9 +40,9 @@ takes n xs = let (ys,zs) = splitAt n xs in ys : takes n zs
 denseHash :: (Num a, Bits a) => [a] -> [a]
 denseHash = fmap (foldl xor 0) . takes 16
 
-knotHash :: BS.ByteString -> String
+knotHash :: String -> String
 knotHash str =
-  let ls = (fmap ord . BS.unpack $ str) ++ [17,31,73,47,23] in
+  let ls = fmap ord str ++ [17,31,73,47,23] in
   concatMap showHex2 . denseHash . sparseHash ls $ [(0::Int)..255]
 
 part2 :: String
