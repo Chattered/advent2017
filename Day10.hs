@@ -18,11 +18,10 @@ knotRollback ls xs = skip (rollback `mod` (length xs)) . fst . knot 0 ls $ xs
   where rollback = negate (sum ls + (sum [0..length ls - 1]))
 
 part1 :: Integer
-part1 =
-  product
-  . take 2
-  . knotRollback [18,1,0,161,255,137,254,252,14,95,165,33,181,168,2,188]
-  $ [0..255]
+part1 = product
+        . take 2
+        . knotRollback [18,1,0,161,255,137,254,252,14,95,165,33,181,168,2,188]
+        $ [0..255]
 
 sparseHash :: [Int] -> [a] -> [a]
 sparseHash ls xs =
