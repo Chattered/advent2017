@@ -38,8 +38,8 @@ oddOneOut :: Eq a => [a] -> Maybe (a, Int, a)
 oddOneOut [] = Nothing
 oddOneOut (x:xs) =
   case partition (== x) (x:xs) of
-  ([x'],(y':z':ys')) -> fmap (\i -> (x',i,y')) (findIndex (== x') (x:xs))
-  ((y':z':ys'),[x']) -> fmap (\i -> (x',i,y')) (findIndex (== x') (x:xs))
+  ([x'],(y':z':_)) -> fmap (\i -> (x',i,y')) (findIndex (== x') (x:xs))
+  ((y':z':_),[x']) -> fmap (\i -> (x',i,y')) (findIndex (== x') (x:xs))
   _ -> Nothing
 
 balance :: Tree a -> Either Integer Integer
