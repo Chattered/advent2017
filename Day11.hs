@@ -24,6 +24,7 @@ hexDistance (V2 x y) =
 cumulate :: Traversable t => (b -> a -> b) -> b -> t a -> (b, t b)
 cumulate f = mapAccumL (\acc x -> (f acc x, acc))
 
+path :: [V2 Integer] -> (V2 Integer, [V2 Integer])
 path = cumulate (^+^) zero
 
 pathEnd :: (Additive f, Num a) => [f a] -> f a
