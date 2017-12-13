@@ -1,5 +1,5 @@
 import Control.Applicative
-import Data.Attoparsec.Text hiding (scan)
+import Data.Attoparsec.Text
 import Data.Bifunctor
 import Data.List (findIndex)
 import qualified Data.Text as T
@@ -17,8 +17,7 @@ severity = sum . fmap (uncurry (*)) . filter caughtAt
 
 caughtsDelayed :: [(Int, Int)] -> [[(Int, Int)]]
 caughtsDelayed firewall =
-  [ filter caughtAt . fmap (first (+ i)) $ firewall
-  | i <- [0..] ]
+  [ filter caughtAt . fmap (first (+ i)) $ firewall | i <- [0..] ]
 
 parseDepth :: Parser (Int,Int)
 parseDepth = liftA2 (,)
