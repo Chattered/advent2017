@@ -10,6 +10,7 @@ let
   myhaskell = pkgs.haskellPackages.ghcWithPackages (p: with p;
     [ attoparsec
       linear
+      PhiledCommon
       cabal-install
     ]);
 in pkgs.stdenv.mkDerivation {

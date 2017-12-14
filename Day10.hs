@@ -1,3 +1,5 @@
+module Day10 where
+
 import Data.Bits
 import Data.Char
 import Numeric
