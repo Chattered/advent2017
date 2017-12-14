@@ -11,13 +11,9 @@ printBinary :: Int -> String
 printBinary = printf "%.4b"
 
 memory :: [[Bool]]
-memory = [ fmap readBool . concat
+memory = [ fmap (/= '0') . concat
            . fmap (printBinary . fst . head . readHex . pure)
            . knotHash $ "stpzcrnm-" ++ show i | i <- [0..127] ]
-
-readBool :: Char -> Bool
-readBool '0' = False
-readBool '1' = True
 
 part1 :: Int
 part1 = length . filter id . concat $ memory
