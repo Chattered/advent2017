@@ -1,10 +1,10 @@
 import Data.List
 
-cycles :: [a] -> [[a]]
-cycles xs = fmap (take (length xs)) (tails (cycle xs))
+rotate :: Int -> [a] -> [a]
+rotate n xs = take (length xs) . drop n . cycle $ xs
 
 spinlock :: Int -> [a] -> a -> [a]
-spinlock i xs j = (cycles xs !! i) ++ [j]
+spinlock i xs j = cycles i xs ++ [j]
 
 cumulate :: Traversable t => (b -> a -> b) -> b -> t a -> t b
 cumulate f = fmap snd . mapAccumL (\acc x -> (f acc x, acc))
