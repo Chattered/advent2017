@@ -46,13 +46,13 @@ cumulate f = mapAccumL (\acc x -> (f acc x, acc))
 
 part1 :: FilePath -> IO Integer
 part1 file = do
-  Right instrs <- fmap (sequence . fmap (parseOnly parseInstr) . lines . pack)
+  Right instrs <- fmap (traverse (parseOnly parseInstr) . lines . pack)
                   $ readFile file
   pure . maximum . M.elems . foldl (flip evalInstr) M.empty $ instrs
 
 part2 :: FilePath -> IO Integer
 part2 file = do
- Right instrs <- fmap (sequence . fmap (parseOnly parseInstr) . lines . pack)
+ Right instrs <- fmap (traverse (parseOnly parseInstr) . lines . pack)
                  $ readFile file
  let (lm,ms) = cumulate (flip evalInstr) M.empty $ instrs
  pure . maximum . concatMap M.elems $ (lm:ms)

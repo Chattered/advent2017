@@ -25,7 +25,7 @@ parseDepth = liftA2 (,)
              (fmap round scientific)
 
 readFirewall :: FilePath -> IO (Either String [(Int, Int)])
-readFirewall = fmap (sequence . fmap (parseOnly parseDepth) . T.lines . T.pack)
+readFirewall = fmap (traverse (parseOnly parseDepth) . T.lines . T.pack)
                . readFile
 
 part1 :: FilePath -> IO (Either String Int)

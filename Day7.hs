@@ -72,7 +72,7 @@ parseData = do
 
 readData :: FilePath -> IO [(String, Integer, [String])]
 readData file = do
-  Right tree <- fmap (sequence . fmap (parseOnly parseData) . lines . pack)
+  Right tree <- fmap (traverse (parseOnly parseData) . lines . pack)
                 $ readFile file
   pure tree
 

@@ -49,7 +49,7 @@ parsePipe = do
 
 buildWorld :: Integral a => FilePath -> IO (M.Map a (S.Set a))
 buildWorld filePath = do
-  Right pipes <- fmap (sequence . fmap (parseOnly parsePipe) . T.lines . T.pack)
+  Right pipes <- fmap (traverse (parseOnly parsePipe) . T.lines . T.pack)
                  . readFile $ filePath
   pure (foldl (M.unionWith S.union) M.empty pipes)
 
