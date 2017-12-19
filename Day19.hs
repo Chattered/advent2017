@@ -43,7 +43,7 @@ readWorld filePath = do
   let Just c = findStart (head allLines)
   pure (worldArray allLines, c)
 
-part1 :: FilePath -> IO [Char]
+part1 :: FilePath -> IO String
 part1 = (fmap . fmap) (uncurry collect) readWorld
   where collect world = catMaybes . unfoldr (run1 world)
 
