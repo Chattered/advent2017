@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import Control.Applicative
 import Data.Attoparsec.Text
 import Data.List (mapAccumL)
