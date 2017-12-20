@@ -69,7 +69,7 @@ solveParticle3 p = liftA3 V3 (sp _x) (sp _y) (sp _z)
 collideAt :: (Integral a, Additive f, Applicative f, Eq (f a)) =>
              f a -> Particle (f a) -> Bool
 collideAt t p = pos p ^+^ liftA2 (*) (vel p) t
-                ^+^ fmap (`div` 2) (acc p `prod` (fmap pred t) `prod` t)
+                ^+^ fmap (`div` 2) (acc p `prod` (fmap succ t) `prod` t)
                 == zero
   where prod = liftA2 (*)
 
