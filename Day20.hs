@@ -62,9 +62,11 @@ solveQuadratic a b c
 solveParticle :: (Floating a, Ord a) => Particle a -> [a]
 solveParticle (Particle p v a) = solveQuadratic (a / 2) (v + a / 2) p
 
-solveParticle3 :: (Ord a, Floating a) => Particle (V3 a) -> [V3 a]
-solveParticle3 p = liftA3 V3 (sp _x) (sp _y) (sp _z)
+solveParticle3 :: (Ord a, Floating a) => Particle (V3 a) -> [a]
+solveParticle3 p = fmap (^. _x)
+                   . filter sameTime $ liftA3 V3 (sp _x) (sp _y) (sp _z)
   where sp l = solveParticle (fmap (^. l) p)
+        sameTime t = t ^. _x == t ^. _y && t ^. _x == t ^. _z
 
 collideAt :: (Integral a, Additive f, Applicative f, Eq (f a)) =>
              f a -> Particle (f a) -> Bool
@@ -81,11 +83,8 @@ candidates (p:ps) =
   (ps',qs)  -> p:ps' ++ candidates qs
 
 collideEventually :: Integral a => Particle (V3 a) -> Particle (V3 a) -> Bool
-collideEventually p1 p2 =
-  any (\t -> t ^. _x == t ^. _y && t ^. _x == t ^. _z && collideAt t p) ts
-  where p = p2 ^-^ p1
-        p' = (fmap . fmap) fromIntegral p :: Particle (V3 Double)
-        ts = (fmap . fmap) round (solveParticle3 p')
+collideEventually p1 p2 = not . null . fmap round . solveParticle3 $ p'
+  where p' = (fmap . fmap) fromIntegral (p2 ^-^ p1) :: Particle (V3 Double)
 
 runSim :: (Eq a, Ord a, Num a) => [Particle (V3 a)] -> [Particle (V3 a)]
 runSim ps = filter (not . (`elem` collisions)) ps
