@@ -22,12 +22,9 @@ instance Additive Particle where
 
 parseParticle :: Parser (Particle (V3 Int))
 parseParticle = do
-  string "p=<"
-  p <- v3
-  string ">, v=<"
-  v <- v3
-  string ">, a=<"
-  a <- v3
+  p <- string "p=<"    *> v3
+  v <- string ">, v=<" *> v3
+  a <- string ">, a=<" *> v3
   pure (Particle p v a)
   where v3 = liftA3 V3 (integer <* char ',') (integer <* char ',') integer
         integer = fmap round scientific
