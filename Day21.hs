@@ -25,9 +25,9 @@ transforms n = direct ++ indirect
         indirect = fmap (flipX n .) direct
 
 shape :: (Integral a, Ix a) => Array (V2 a) Char
-shape = listArray ((V2 0 0),(V2 2 2)) . concat . transpose $ [".#.",
-                                                              "..#",
-                                                              "###"]
+shape = makeShape [".#.",
+                   "..#",
+                   "###"]
 
 makeShape :: (Integral i, Ix i) => [[e]] -> Array (V2 i) e
 makeShape xss = listArray ((V2 0 0),(V2 (n-1) (n-1))) . concat . transpose $ xss
