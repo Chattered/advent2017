@@ -39,6 +39,8 @@ transformShape t arr = ixmap (bounds arr) t arr
 norm :: (Ord e, Ix t, Num t) => t -> Array (V2 t) e -> Array (V2 t) e
 norm n arr = minimum (fmap (($ arr) . ixmap (bounds arr)) (transforms n))
 
+enhance :: (Ord e, Integral a, Integral i, Ix i, Ix a) =>
+           ([e] -> [[f]]) -> Array (V2 a) e -> Array (V2 i) f
 enhance enhancer arr | even size = uncurry merge (subnorm 2)
                      | otherwise = uncurry merge (subnorm 3)
   where (V2 lx ly, V2 mx my) = bounds arr
