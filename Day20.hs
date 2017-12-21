@@ -86,24 +86,24 @@ collideEventually :: Integral a => Particle (V3 a) -> Particle (V3 a) -> Bool
 collideEventually p1 p2 = not . null . fmap round . solveParticle3 $ p'
   where p' = (fmap . fmap) fromIntegral (p2 ^-^ p1) :: Particle (V3 Double)
 
-runSim :: (Eq a, Ord a, Num a) => [Particle (V3 a)] -> [Particle (V3 a)]
-runSim ps = filter (not . (`elem` collisions)) ps
+step :: (Eq a, Ord a, Num a) => [Particle (V3 a)] -> [Particle (V3 a)]
+step ps = filter (not . (`elem` collisions)) ps
   where collisions = concat . filter ((> 1) . length)
                      . groupBy (\p1 p2 -> pos p1 == pos p2)
                      . sortBy (compare `on` pos) $ ps
 
-runToCollision :: (Eq a, Ord a, Num a) => [Particle (V3 a)] -> [Particle (V3 a)]
-runToCollision = head . tail . nubBy (\xs ys -> length xs == length ys)
-                 . iterate (fmap advance . runSim)
+toCollision :: (Eq a, Ord a, Num a) => [Particle (V3 a)] -> [Particle (V3 a)]
+toCollision = head . tail . nubBy (\xs ys -> length xs == length ys)
+              . iterate (fmap advance . step)
 
-go :: Integral a => [Particle (V3 a)] -> Maybe (Int,[Particle (V3 a)])
-go ps = go' (candidates ps)
-  where go' [] = Nothing
-        go' cs = Just (length cs - length remaining, remaining)
-          where remaining = runToCollision cs
+nbDestroyed :: Integral a => [Particle (V3 a)] -> Int
+nbDestroyed = sum . unfoldr go . candidates
+  where go [] = Nothing
+        go cs = Just (length cs - length remaining, remaining)
+          where remaining = toCollision cs
 
 advance :: (Additive f, Num a) => Particle (f a) -> Particle (f a)
 advance (Particle p v a) = Particle (p ^+^ v ^+^ a) (v ^+^ a) a
 
 part2 :: FilePath -> IO (Either String Int)
-part2 = (fmap . fmap) (\ps -> length ps - sum (unfoldr go ps)) . readParticles
+part2 = (fmap . fmap) (\ps -> length ps - nbDestroyed ps) . readParticles
