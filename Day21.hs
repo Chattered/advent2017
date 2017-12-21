@@ -9,10 +9,6 @@ import qualified Data.Map as M
 import qualified Data.Text as T
 import Linear.V2
 
-splitsAt :: Integral a => a -> [b] -> [[b]]
-splitsAt n [] = []
-splitsAt n xs = let (ys,zs) = splitAt (fromIntegral n) xs in ys : splitsAt n zs
-
 flipX :: Num a => a -> V2 a -> V2 a
 flipX n (V2 x y) = V2 x (n-y-1)
 
@@ -24,11 +20,6 @@ transforms n = direct ++ indirect
   where direct   = take 4 (iterate (rot90 n .) id)
         indirect = fmap (flipX n .) direct
 
-shape :: (Integral a, Ix a) => Array (V2 a) Char
-shape = makeShape [".#.",
-                   "..#",
-                   "###"]
-
 makeShape :: (Integral i, Ix i) => [[e]] -> Array (V2 i) e
 makeShape xss = listArray ((V2 0 0),(V2 (n-1) (n-1))) . concat . transpose $ xss
   where n = genericLength xss
@@ -38,6 +29,10 @@ transformShape t arr = ixmap (bounds arr) t arr
 
 norm :: (Ord e, Ix t, Num t) => t -> Array (V2 t) e -> Array (V2 t) e
 norm n arr = minimum (fmap (($ arr) . ixmap (bounds arr)) (transforms n))
+
+splitsAt :: Integral a => a -> [b] -> [[b]]
+splitsAt n [] = []
+splitsAt n xs = let (ys,zs) = splitAt (fromIntegral n) xs in ys : splitsAt n zs
 
 enhance :: (Ord e, Integral a, Integral i, Ix i, Ix a) =>
            ([e] -> [[f]]) -> Array (V2 a) e -> Array (V2 i) f
@@ -70,8 +65,18 @@ parseEnhancer = fmap (fmap ((M.!) . foldMap (uncurry M.singleton))
                       . T.lines . T.pack)
                 . readFile
 
-main :: IO ()
-main = do
-  Right enhancer <- parseEnhancer "/home/phil/Downloads/input"
-  traverse_ print $ zip (fmap countOn (iterate (enhance enhancer) shape)) [0..]
-  where countOn = length . filter (== '#') . elems
+readFractal :: (Integral a, Ix a) => FilePath -> IO [Array (V2 a) Char]
+readFractal filePath = do
+  Right enhancer <- parseEnhancer filePath
+  pure (iterate (enhance enhancer) seedShape)
+
+seedShape :: (Integral a, Ix a) => Array (V2 a) Char
+seedShape = makeShape [".#.",
+                       "..#",
+                       "###"]
+
+part1 :: FilePath -> IO Int
+part1 = fmap (length . filter (== '#') . elems . (!! 5)) . readFractal
+
+part2 :: FilePath -> IO Int
+part2 = fmap (length . filter (== '#') . elems . (!! 18)) . readFractal
