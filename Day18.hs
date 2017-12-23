@@ -1,5 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+module Day18 where
+
 import Control.Applicative hiding (Const)
 import Data.Attoparsec.Text
 import Data.Function
