@@ -16,10 +16,10 @@ bridges :: Ord a => a -> [(a,a)] -> [[(a,a)]]
 bridges input ports =
   case selectBy (\(x,y) -> x == input || y == input) ports of
   [] -> [[]]
-  foo -> [ (x,y):b
-         | ((x,y),ports') <- foo
-         , let output = other (x,y) input
-         , b <- bridges output ports' ]
+  selections -> [ (x,y):b
+                | ((x,y),ports') <- selections
+                , let output = other (x,y) input
+                , b <- bridges output ports' ]
 
 maximumsBy :: (a -> a -> Ordering) -> [a] -> [a]
 maximumsBy p xs = let m = maximumBy p xs in filter (\x -> p m x == EQ) xs
