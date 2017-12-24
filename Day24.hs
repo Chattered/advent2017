@@ -38,6 +38,6 @@ part1 = fmap (strength . maximumBy (compare `on` strength) . bridges 0)
         . readPipes
 
 part2 :: FilePath -> IO Int
-part2 = fmap (strength . maximumBy (compare `on` length)
+part2 = fmap (strength . maximumBy (compare `on` strength)
               . maximumsBy (compare `on` length) . bridges 0)
         . readPipes
